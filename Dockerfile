@@ -25,23 +25,22 @@
 #
 
 # Start from Tomcat image
-FROM tomcat:8.0.20-jre7
-MAINTAINER Michael Jumper <mike.jumper@guac-dev.org>
+FROM tomcat8:ssl
+
 
 # Version info
-ENV \
-    GUAC_VERSION=0.9.7      \
+ENV GUAC_VERSION=0.9.7      \
     GUAC_JDBC_VERSION=0.9.7
 
 # Add configuration scripts
 COPY bin /opt/guacamole/bin/
 
 # Download and install latest guacamole-client and authentication
-RUN \
-    /opt/guacamole/bin/download-guacamole.sh "$GUAC_VERSION" /usr/local/tomcat/webapps && \
+RUN /opt/guacamole/bin/download-guacamole.sh "$GUAC_VERSION" /usr/local/tomcat/webapps && \
     /opt/guacamole/bin/download-jdbc-auth.sh "$GUAC_JDBC_VERSION" /opt/guacamole
 
-# Start Guacamole under Tomcat, listening on 0.0.0.0:8080
+# Start Guacamole under Tomcat, listening on 0.0.0.0:8080 & 8443
 EXPOSE 8080
+EXPOSE 8443
 CMD ["/opt/guacamole/bin/start.sh" ]
 
